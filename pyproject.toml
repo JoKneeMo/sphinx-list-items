@@ -4,8 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sphinx-list-items"
-dynamic = ["version", "readme"]
+dynamic = ["version"]
 description = "A Sphinx extension to list items such as figures, tables, versionadded, etc."
+readme = "README.md"
 authors = [
     { name = "JoKneeMo", email = "jokneemo@example.com" }
 ]
@@ -44,4 +45,3 @@ include = ["sphinx_list_items*"]
 
 [tool.setuptools.dynamic]
 version = {attr = "sphinx_list_items.__version__"}
-readme = {file = "README.md"}
