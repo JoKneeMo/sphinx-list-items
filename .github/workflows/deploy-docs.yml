@@ -27,7 +27,8 @@ jobs:
 
       - name: Install Python packages
         run: |
-          pip install --upgrade -r doc/requirements.txt sphinx-list-items
+          pip install --upgrade pip
+          pip install -r doc/requirements.txt .
 
       - name: Build HTML docs
         id: build-html

@@ -1,6 +1,5 @@
 sphinx>=5.0.2
 sphinx-immaterial
-sphinx-business-theme @ git+https://github.com/Nekmo/sphinx-business-theme@c7b390f0b
 weasyprint
 sphinxcontrib-spelling>=7.7.0
 pymdown-extensions>=10.16.1
