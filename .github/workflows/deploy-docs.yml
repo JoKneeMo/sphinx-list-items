@@ -1,0 +1,61 @@
+name: Deploy docs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      html-path: ${{ steps.build.outputs.html-path }}
+    steps:
+      - name: Install APT packages
+        run: |
+          sudo apt update
+          sudo apt install -y libenchant-2-dev libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 libharfbuzz-subset0 jq libenchant-2-dev
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python packages
+        run: |
+          pip install --upgrade -r doc/requirements.txt sphinx-list-items
+
+      - name: Build HTML docs
+        id: build-html
+        run: |
+          make html -C doc
+          echo "html-path=doc/build/html" >> $GITHUB_OUTPUT
+
+      - name: Upload built docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-docs
+          path: doc/build/html
+
+  deploy-docs:
+    needs: build-docs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download built docs artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: html-docs
+          path: html-docs
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: html-docs
